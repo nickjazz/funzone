@@ -16,9 +16,10 @@ const hightLine = (item: HTMLElement, outline: HTMLDivElement) => {
 	});
 };
 
-const resizeOut = ({ item, x, y, width, height }) => {
+const resizeOut = ({ item, x = 0, y = 0, width, height }) => {
 	item.style.width = `${width}px`;
 	item.style.height = `${height}px`;
+
 	item.style.top = `${y}px`;
 	item.style.left = `${x}px`;
 };
