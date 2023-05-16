@@ -5,13 +5,13 @@ import {
 	ComponentsLib,
 	Funzone,
 	SenSorCenter,
-} from "../components";
-import { NavBar, PageHeader, Card, Form } from "../components/AntdComponent";
+} from "../../components";
+import { NavBar, PageHeader, Card, Form } from "../../components/AntdComponent";
 import "antd/dist/reset.css";
-import schame from "./schema3.json";
+import schame from "./schema.json";
 
 export default {
-	title: "Whiteboard",
+	title: "Ordering",
 	component: Whiteboard,
 };
 

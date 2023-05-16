@@ -9,6 +9,7 @@ import {
 	MeasuringStrategy,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import orderBy from "lodash/orderBy";
 import map from "lodash/map";
 import { cond } from "lodash/fp";
 import { Provider } from "../FunzoneContext";
@@ -77,17 +78,20 @@ const Funzone = ({
 		const _cols: string[][] = [];
 		const _items: { [x: string]: any } = {};
 
-		map(schema, (s, rowKey) => {
-			_rows.push(rowKey);
-			_cols.push(Object.keys(s));
-			map(s, (item, colKey) => {
-				_items[colKey] = item;
+		map(schema, (x) => {
+			_rows.push(x.id);
+
+			_cols.push([...x?.children?.map((xc) => xc.id)]);
+			map(x?.children, (item) => {
+				_items[item.id] = item;
 			});
 		});
 
-		setItems(_items);
+		console.log("_cols", _rows, _cols);
+
 		setRows(_rows);
 		setCols(_cols);
+		setItems(_items);
 	}, [schema]);
 
 	useEffect(() => {

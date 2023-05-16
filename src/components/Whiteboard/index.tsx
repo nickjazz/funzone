@@ -61,7 +61,7 @@ const Whiteboard = ({ className }: IFWhiteBoard) => {
 				<div ref={setNodeRef} className="absolute w-full h-full" />
 				{map(rows, (row, index) => {
 					const child = cols?.[index];
-
+					if (!child) return;
 					return (
 						<SortableItem type="row" key={`${row}-${child.length}`} id={row}>
 							{/* {row} */}
