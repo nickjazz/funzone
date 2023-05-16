@@ -1,82 +1,82 @@
 {
-  "name": "funzone",
-  "version": "0.0.1",
-  "description": "A tool for drag-and-drop UI editing can be translated Such a tool allows users to intuitively drag and drop components on a graphical interface.",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "package.json",
-    "README.md",
-    "ChangeLogs.md"
-  ],
-  "private": false,
-  "scripts": {
-    "rollup-watch": "rollup -c -w",
-    "build": "CI=false rollup -c",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
-  },
-  "keywords": [
-    "react",
-    "typescript"
-  ],
-  "devDependencies": {
-    "@babel/core": "^7.17.8",
-    "@babel/preset-env": "^7.21.5",
-    "@babel/preset-react": "^7.18.6",
-    "@babel/preset-typescript": "^7.21.5",
-    "@rollup/plugin-commonjs": "^21.0.1",
-    "@rollup/plugin-node-resolve": "^13.1.3",
-    "@rollup/plugin-typescript": "^8.3.0",
-    "@storybook/addon-actions": "^7.0.9",
-    "@storybook/addon-essentials": "^7.0.9",
-    "@storybook/addon-interactions": "^7.0.9",
-    "@storybook/addon-links": "^7.0.9",
-    "@storybook/addon-postcss": "^2.0.0",
-    "@storybook/react": "^7.0.9",
-    "@storybook/react-webpack5": "^7.0.9",
-    "@storybook/testing-library": "^0.1.0",
-    "@types/react": "^18.0.12",
-    "@types/react-dom": "^18.0.5",
-    "autoprefixer": "^10.4.14",
-    "babel-loader": "^8.2.4",
-    "postcss": "^8.4.23",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
-    "rollup": "^2.67.0",
-    "rollup-plugin-dts": "^4.1.0",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-postcss": "^4.0.2",
-    "rollup-plugin-terser": "^7.0.2",
-    "storybook": "^7.0.9",
-    "storybook-css-modules": "^1.0.8",
-    "typescript": "^4.5.5"
-  },
-  "peerDependencies": {
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0"
-  },
-  "author": "Kim Wong <kimblog321@gmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/nickjazz/funzone.git"
-  },
-  "bugs": {
-    "url": "https://github.com/nickjazz/funzone/issues",
-    "email": "kimblog321@gmail.com"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "@dnd-kit/core": "^6.0.8",
-    "@dnd-kit/modifiers": "^6.0.1",
-    "@dnd-kit/sortable": "^7.0.2",
-    "antd": "^5.4.7",
-    "classnames": "^2.3.2",
-    "dot-prop-immutable": "^2.1.1",
-    "nanoid": "^4.0.2",
-    "react-feather": "^2.0.10",
-    "tailwindcss": "^3.3.2"
-  }
+	"name": "funzone",
+	"version": "0.0.2",
+	"description": "A tool for drag-and-drop UI editing can be translated Such a tool allows users to intuitively drag and drop components on a graphical interface.",
+	"main": "dist/cjs/index.js",
+	"module": "dist/esm/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"package.json",
+		"README.md",
+		"ChangeLogs.md"
+	],
+	"private": false,
+	"scripts": {
+		"rollup-watch": "rollup -c -w",
+		"build": "CI=false rollup -c",
+		"storybook": "storybook dev -p 6006",
+		"build-storybook": "storybook build"
+	},
+	"keywords": [
+		"react",
+		"typescript"
+	],
+	"devDependencies": {
+		"@babel/core": "^7.17.8",
+		"@babel/preset-env": "^7.21.5",
+		"@babel/preset-react": "^7.18.6",
+		"@babel/preset-typescript": "^7.21.5",
+		"@rollup/plugin-commonjs": "^21.0.1",
+		"@rollup/plugin-node-resolve": "^13.1.3",
+		"@rollup/plugin-typescript": "^8.3.0",
+		"@storybook/addon-actions": "^7.0.9",
+		"@storybook/addon-essentials": "^7.0.9",
+		"@storybook/addon-interactions": "^7.0.9",
+		"@storybook/addon-links": "^7.0.9",
+		"@storybook/addon-postcss": "^2.0.0",
+		"@storybook/react": "^7.0.9",
+		"@storybook/react-webpack5": "^7.0.9",
+		"@storybook/testing-library": "^0.1.0",
+		"@types/react": "^18.0.12",
+		"@types/react-dom": "^18.0.5",
+		"autoprefixer": "^10.4.14",
+		"babel-loader": "^8.2.4",
+		"postcss": "^8.4.23",
+		"react": "^18.1.0",
+		"react-dom": "^18.1.0",
+		"rollup": "^2.67.0",
+		"rollup-plugin-dts": "^4.1.0",
+		"rollup-plugin-peer-deps-external": "^2.2.4",
+		"rollup-plugin-postcss": "^4.0.2",
+		"rollup-plugin-terser": "^7.0.2",
+		"storybook": "^7.0.9",
+		"storybook-css-modules": "^1.0.8",
+		"typescript": "^4.5.5"
+	},
+	"peerDependencies": {
+		"react": "^18.1.0",
+		"react-dom": "^18.1.0"
+	},
+	"author": "Kim Wong <kimblog321@gmail.com>",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nickjazz/funzone.git"
+	},
+	"bugs": {
+		"url": "https://github.com/nickjazz/funzone/issues",
+		"email": "kimblog321@gmail.com"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"@dnd-kit/core": "^6.0.8",
+		"@dnd-kit/modifiers": "^6.0.1",
+		"@dnd-kit/sortable": "^7.0.2",
+		"antd": "^5.4.7",
+		"classnames": "^2.3.2",
+		"dot-prop-immutable": "^2.1.1",
+		"nanoid": "^4.0.2",
+		"react-feather": "^2.0.10",
+		"tailwindcss": "^3.3.2"
+	}
 }
