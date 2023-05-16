@@ -1,6 +1,7 @@
 const hightLine = (item: HTMLElement, outline: HTMLDivElement) => {
 	const { width, height, x, y } = item.getBoundingClientRect();
-	resizeOut({ item: outline, x, y, width, height });
+	resizeOut({ item: outline, width, height });
+	reLocate({ item: outline, x, y });
 
 	const styleList = ["border-2", "rounded-sm"];
 	outline.classList.add(...styleList);
@@ -16,10 +17,12 @@ const hightLine = (item: HTMLElement, outline: HTMLDivElement) => {
 	});
 };
 
-const resizeOut = ({ item, x = 0, y = 0, width, height }) => {
+const resizeOut = ({ item, width, height }) => {
 	item.style.width = `${width}px`;
 	item.style.height = `${height}px`;
+};
 
+const reLocate = ({ item, x, y }) => {
 	item.style.top = `${y}px`;
 	item.style.left = `${x}px`;
 };
@@ -49,4 +52,11 @@ const findFunItem = (e: {
 	return { element, id: element?.getAttribute("data-id") };
 };
 
-export { hightLine, cleanColControl, cleanOut, findFunItem, resizeOut };
+export {
+	hightLine,
+	cleanColControl,
+	cleanOut,
+	findFunItem,
+	resizeOut,
+	reLocate,
+};

@@ -4,7 +4,7 @@ import debounce from "lodash/debounce";
 import { useDndMonitor } from "@dnd-kit/core";
 import map from "lodash/map";
 import { set } from "dot-prop-immutable";
-import { hightLine, findFunItem, resizeOut } from "./utils";
+import { hightLine, findFunItem, resizeOut, reLocate } from "./utils";
 import { context } from "../FunzoneContext";
 import Debug from "./Debug";
 import { StringInput, NumberInput, ObjectInput } from "../control";
@@ -34,10 +34,13 @@ const SensorCenter = ({ className, debug = false }: IFSensorCenter) => {
 		onDragStart() {
 			setIsDragging(true);
 			cleanUp();
+			reLocate({
+				item: out.current,
+				x: -10000,
+				y: 0,
+			});
 			resizeOut({
 				item: out.current,
-				x: -1000,
-				y: 0,
 				width: 0,
 				height: 0,
 			});
@@ -126,7 +129,7 @@ const SensorCenter = ({ className, debug = false }: IFSensorCenter) => {
 			) as HTMLElement;
 			if (hoverDom) {
 				const { x, y, width, height } = hoverDom.getBoundingClientRect();
-				resizeOut({ item: out.current, x, y, width, height });
+				reLocate({ item: out.current, x, y });
 			}
 		};
 
