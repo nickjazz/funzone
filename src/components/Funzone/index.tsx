@@ -29,8 +29,8 @@ interface IFFunzone {
 	control?: any;
 	renderRowHandler?: ({ handlerProps, type, id }) => React.ReactElement;
 	renderColHandler?: ({ handlerProps, type, id }) => React.ReactElement;
-	renderLibHandler?: ({ ...x }) => React.ReactElement;
-	renderRowPlaceholder?: ({ ...x }) => React.ReactElement;
+	renderLibHandler?: (...x) => React.ReactElement;
+	renderRowPlaceholder?: (...x) => React.ReactElement;
 }
 
 const Funzone = ({
@@ -86,8 +86,6 @@ const Funzone = ({
 				_items[item.id] = item;
 			});
 		});
-
-		console.log("_cols", _rows, _cols);
 
 		setRows(_rows);
 		setCols(_cols);

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { defaultAnimateLayoutChanges, useSortable } from "@dnd-kit/sortable";
 import cx from "classnames";
+import isNaN from "lodash/isNaN";
 import { CSS } from "@dnd-kit/utilities";
 import useMountStatus from "./useMountStatus";
 import { context } from "../FunzoneContext";
@@ -15,7 +16,7 @@ function animateLayoutChanges(args: any) {
 	return true;
 }
 
-const SortableItem = ({ id, type, children, isNew = false, width = 0 }) => {
+const SortableItem = ({ id, type, children, isNew = false, width }) => {
 	const { renderColHandler, renderRowHandler, onRemove } = useContext(context);
 	const mounted = useMountStatus();
 
@@ -41,10 +42,20 @@ const SortableItem = ({ id, type, children, isNew = false, width = 0 }) => {
 	const colActive = active?.data?.current?.type === "col";
 	const sourceActive = active?.data?.current?.type === "source";
 
+	const getWidth = () => {
+		if (typeof +width === "number" && !isNaN(+width)) {
+			return { flexBasis: `${(100 / 12) * width}%` };
+		} else if (width === "auto") {
+			return { flex: 1 };
+		} else {
+			return {};
+		}
+	};
+
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
-		flexBasis: width ? `${(100 / 12) * width}%` : "100%",
+		...getWidth(),
 	};
 
 	const handlerProps = {

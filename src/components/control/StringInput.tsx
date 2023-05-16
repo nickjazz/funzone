@@ -4,7 +4,6 @@ const StringInput = ({ label, value, onChange }) => {
 	const [data, setData] = useState("");
 
 	useEffect(() => {
-		console.log("value", value);
 		setData(value);
 	}, [value]);
 

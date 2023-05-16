@@ -4,7 +4,13 @@ import debounce from "lodash/debounce";
 import { useDndMonitor } from "@dnd-kit/core";
 import map from "lodash/map";
 import { set } from "dot-prop-immutable";
-import { hightLine, findFunItem, resizeOut, reLocate } from "./utils";
+import {
+	hightLine,
+	findFunItem,
+	resizeOut,
+	reLocate,
+	findControlByType,
+} from "./utils";
 import { context } from "../FunzoneContext";
 import Debug from "./Debug";
 import { StringInput, NumberInput, ObjectInput } from "../control";
@@ -12,6 +18,7 @@ import { StringInput, NumberInput, ObjectInput } from "../control";
 interface IFSensorCenter {
 	className?: string;
 	debug?: boolean;
+	children?: (x: any) => React.ReactElement;
 }
 
 interface IFObject {
@@ -20,9 +27,13 @@ interface IFObject {
 
 const warningLog: string[] = [];
 
-const SensorCenter = ({ className, debug = false }: IFSensorCenter) => {
+const SensorCenter = ({
+	className,
+	debug = false,
+	children,
+}: IFSensorCenter) => {
 	const out = useRef<HTMLDivElement | null>(null);
-	const { control, items, setItems } = useContext(context);
+	const { control, items, setItems, ui } = useContext(context);
 	const [isDragging, setIsDragging] = useState(false);
 	const [hover, setHover] = useState<IFObject>({});
 	const [editProps, setEditProps] = useState<IFObject>({});
@@ -78,11 +89,12 @@ const SensorCenter = ({ className, debug = false }: IFSensorCenter) => {
 		const { id } = findFunItem(e);
 		if (!id || !items) return;
 		const props = items?.[id]?.props || {};
-		const control = items?.[id]?.control || {};
+		// this type have custom contro ?
+		const controlGroup = findControlByType(ui, items?.[id]?.type);
 
 		setEditId(id);
 		setEditProps(props);
-		setEditControl(control);
+		setEditControl(controlGroup);
 	};
 
 	/**
@@ -103,17 +115,24 @@ const SensorCenter = ({ className, debug = false }: IFSensorCenter) => {
 	 * Watch Edit dom, sync this size to outline wrapper
 	 */
 	useEffect(() => {
+		const watchItem = document.querySelector(`[data-id="${editId}"]`);
+
 		const resizeOb = new ResizeObserver((entries) => {
 			// since we are observing only a single element, so we access the first element in entries array
 			let rect = entries[0].contentRect;
+			const { x, y } = watchItem?.getBoundingClientRect();
 			resizeOut({
 				item: out.current,
 				width: rect.width,
 				height: rect.height,
 			});
+			reLocate({
+				item: out.current,
+				x,
+				y,
+			});
 		});
 
-		const watchItem = document.querySelector(`[data-id="${editId}"]`);
 		if (!watchItem) return;
 		resizeOb.observe(watchItem);
 		return () => resizeOb.unobserve(watchItem);
@@ -154,19 +173,14 @@ const SensorCenter = ({ className, debug = false }: IFSensorCenter) => {
 	const getControlByValue = (x: any, key: string) => {
 		const typeIs = typeof x;
 		let Element = StringInput;
+		const custom = editControl[key]?.type;
 
-		const customMy = editControl[key]?.type;
-
-		if (control?.[customMy]) {
-			Element = control?.[customMy]?.markup;
+		if (control?.[custom]) {
+			Element = control?.[custom]?.markup;
 			return Element;
-		} else if (
-			customMy &&
-			!control?.[customMy] &&
-			!warningLog.includes(customMy)
-		) {
-			warningLog.push(customMy);
-			console.warn(`[${key}] missing control component with name: ${customMy}`);
+		} else if (custom && !control?.[custom] && !warningLog.includes(custom)) {
+			warningLog.push(custom);
+			console.warn(`[${key}] missing control component with name: ${custom}`);
 		}
 
 		switch (typeIs) {
@@ -186,6 +200,21 @@ const SensorCenter = ({ className, debug = false }: IFSensorCenter) => {
 		return Element;
 	};
 
+	const getControlItems = () => {
+		const next = map(editProps, (value, key) => {
+			const DisplayControl = getControlByValue(value, key);
+			return DisplayControl;
+		});
+		return next;
+	};
+
+	const getControlProps = () => {
+		const next = map(editProps, (value, key) => {
+			return { value, key };
+		});
+		return next;
+	};
+
 	return (
 		<>
 			<div className={cx("relataive", className)}>
@@ -200,19 +229,32 @@ const SensorCenter = ({ className, debug = false }: IFSensorCenter) => {
 					/>
 				)}
 
-				{/* contro */}
-				<div className="mt-6 flex flex-col gap-4">
-					{map(editProps, (value, key) => {
-						const DisplayControl = getControlByValue(value, key);
-						return (
-							<DisplayControl
-								label={key}
-								value={value}
-								onChange={(x: string) => handleControlChange({ key, value: x })}
-							/>
-						);
+				{/* control */}
+				{!children && (
+					<div className="mt-6 flex flex-col gap-4">
+						{map(editProps, (value, key) => {
+							const DisplayControl = getControlByValue(value, key);
+							return (
+								<DisplayControl
+									key={key}
+									label={key}
+									value={value}
+									onChange={(x: string) =>
+										handleControlChange({ key, value: x })
+									}
+								/>
+							);
+						})}
+					</div>
+				)}
+
+				{children &&
+					children({
+						editProps,
+						controlItems: getControlItems(),
+						controlProps: getControlProps(),
+						onChange: handleControlChange,
 					})}
-				</div>
 			</div>
 
 			<div

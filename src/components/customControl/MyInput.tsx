@@ -13,8 +13,8 @@ const MyInput = ({ label, value, onChange }) => {
 	};
 
 	return (
-		<div className="flex flex-col gap-1">
-			<div className="pr-3 font-bold capitalize">{label}</div>
+		<div className="flex flex-row items-center gap-1">
+			<div className="pr-3 font-bold capitalize w-20">{label}</div>
 			<input
 				className="py-1.5 px-2 rounded-sm w-full text-sm border-2 border-slate-400 text-slate-500 "
 				value={data}

@@ -1,17 +1,18 @@
 import React from "react";
 import { Typography, List } from "antd";
 import map from "lodash/map";
+import isEmpty from "lodash/isEmpty";
 import cx from "classnames";
 import {
 	Whiteboard,
 	ComponentsLib,
 	Funzone,
 	SenSorCenter,
-} from "../components";
-import { NavBar, PageHeader, Card, Form } from "../components/AntdComponent";
+} from "../../components";
+import { NavBar, PageHeader, Card, Form } from "../../components/AntdComponent";
 import "antd/dist/reset.css";
 import schame from "./schema2.json";
-import { MyInput, MySpanInput } from "../components/customControl";
+import { MyInput, MySpanInput } from "../../components/customControl";
 
 export default {
 	title: "Custom Component",
@@ -35,6 +36,14 @@ const Template = () => {
 			key: "PageHeader",
 			markup: PageHeader,
 			defaultProps: { span: 12, title: "default title" },
+			control: {
+				title: {
+					type: "MyInput",
+				},
+				span: {
+					type: "MySpanInput",
+				},
+			},
 		},
 		{
 			label: "NavBar",
@@ -100,6 +109,31 @@ const Template = () => {
 		);
 	};
 
+	const renderControlPanel = ({
+		editProps,
+		controlItems,
+		controlProps,
+		onChange,
+	}) => {
+		if (isEmpty(editProps)) return <div></div>;
+
+		return (
+			<div className="flex flex-col gap-4">
+				{map(controlItems, (Item, index) => {
+					const ControlItem = controlProps?.[index];
+					return (
+						<Item
+							key={ControlItem?.key}
+							label={ControlItem?.key}
+							value={ControlItem?.value}
+							onChange={(x) => onChange({ key: ControlItem?.key, value: x })}
+						/>
+					);
+				})}
+			</div>
+		);
+	};
+
 	return (
 		<div className="flex gap-6">
 			<Funzone
@@ -117,7 +151,9 @@ const Template = () => {
 			>
 				<ComponentsLib className="w-[200px] border-none flex flex-col gap-2" />
 				<Whiteboard className="flex-1 max-w-[60vw]" />
-				<SenSorCenter className="flex-1 max-w-[300px] pl-4" />
+				<SenSorCenter className="flex-1 max-w-[300px] pl-4">
+					{renderControlPanel}
+				</SenSorCenter>
 			</Funzone>
 		</div>
 	);

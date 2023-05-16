@@ -1,3 +1,5 @@
+import find from "lodash/find";
+
 const hightLine = (item: HTMLElement, outline: HTMLDivElement) => {
 	const { width, height, x, y } = item.getBoundingClientRect();
 	resizeOut({ item: outline, width, height });
@@ -52,11 +54,17 @@ const findFunItem = (e: {
 	return { element, id: element?.getAttribute("data-id") };
 };
 
+const findControlByType = (ui, type) => {
+	const control = find(ui, ["label", type])?.control || {};
+	return control;
+};
+
 export {
 	hightLine,
 	cleanColControl,
 	cleanOut,
 	findFunItem,
+	findControlByType,
 	resizeOut,
 	reLocate,
 };
