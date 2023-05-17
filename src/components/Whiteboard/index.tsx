@@ -68,6 +68,7 @@ const Whiteboard = ({ className }: IFWhiteBoard) => {
 							{child.length === 0 && renderRowPlaceholder({ row })}
 
 							{child && renderChild(child)}
+							<></>
 						</SortableItem>
 					);
 				})}

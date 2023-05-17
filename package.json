@@ -1,6 +1,6 @@
 {
 	"name": "funzone",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "A tool for drag-and-drop UI editing can be translated Such a tool allows users to intuitively drag and drop components on a graphical interface.",
 	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",
@@ -72,7 +72,6 @@
 		"@dnd-kit/core": "^6.0.8",
 		"@dnd-kit/modifiers": "^6.0.1",
 		"@dnd-kit/sortable": "^7.0.2",
-		"antd": "^5.4.7",
 		"classnames": "^2.3.2",
 		"dot-prop-immutable": "^2.1.1",
 		"nanoid": "^4.0.2",

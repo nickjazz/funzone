@@ -1,8 +1,7 @@
 import React from "react";
-import { Menu, MenuProps } from "antd";
 import { useState } from "react";
 
-const items: MenuProps["items"] = [
+const items = [
 	{
 		label: "Navigation One",
 		key: "mail",
@@ -56,19 +55,16 @@ const items: MenuProps["items"] = [
 	},
 ];
 const NavBar = ({ data = items }) => {
-	const [current, setCurrent] = useState("mail");
-
-	const onClick = (e) => {
-		console.log("click ", e);
-		setCurrent(e.key);
-	};
 	return (
-		<Menu
-			onClick={onClick}
-			selectedKeys={[current]}
-			mode="horizontal"
-			items={data}
-		/>
+		<div className="flex gap-1 border-y">
+			{items?.map((item) => {
+				return (
+					<div key={item.key} className="p-2 text-xs ">
+						{item.label}
+					</div>
+				);
+			})}
+		</div>
 	);
 };
 

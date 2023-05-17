@@ -9,7 +9,7 @@ import {
 	Funzone,
 	SenSorCenter,
 } from "../../components";
-import { NavBar, PageHeader, Card, Form } from "../../components/AntdComponent";
+import { NavBar, PageHeader, Form } from "../../components/AntdComponent";
 import "antd/dist/reset.css";
 import schame from "./schema2.json";
 import { MyInput, MySpanInput } from "../../components/customControl";
@@ -53,13 +53,6 @@ const Template = () => {
 			key: "NavBar",
 			markup: NavBar,
 			defaultProps: { span: 12 },
-		},
-		{
-			label: "Card",
-			group: "inline",
-			key: "Card",
-			markup: Card,
-			defaultProps: { span: 3 },
 		},
 		{
 			label: "List",

@@ -16,7 +16,13 @@ function animateLayoutChanges(args: any) {
 	return true;
 }
 
-const SortableItem = ({ id, type, children, isNew = false, width }) => {
+const SortableItem = ({
+	id,
+	type,
+	children = null,
+	isNew = false,
+	width = "auto",
+}) => {
 	const { renderColHandler, renderRowHandler, onRemove } = useContext(context);
 	const mounted = useMountStatus();
 
@@ -44,7 +50,7 @@ const SortableItem = ({ id, type, children, isNew = false, width }) => {
 
 	const getWidth = () => {
 		if (typeof +width === "number" && !isNaN(+width)) {
-			return { flexBasis: `${(100 / 12) * width}%` };
+			return { flexBasis: `${(100 / 12) * +width}%` };
 		} else if (width === "auto") {
 			return { flex: 1 };
 		} else {
