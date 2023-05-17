@@ -5,8 +5,8 @@ import {
 	ComponentsLib,
 	Funzone,
 	SenSorCenter,
-} from "../components";
-import { NavBar, PageHeader, Card, Form } from "../components/AntdComponent";
+} from "../../components";
+import { NavBar, PageHeader, Card, Form } from "../../components/AntdComponent";
 import "antd/dist/reset.css";
 import schame from "./schema3.json";
 
@@ -82,7 +82,7 @@ const Template = () => {
 			>
 				<ComponentsLib className="w-[200px]" />
 				<Whiteboard className="flex-1 max-w-[60vw]" />
-				<SenSorCenter debug className="flex-1 max-w-[300px]" />
+				<SenSorCenter className="flex-1 max-w-[300px]" />
 			</Funzone>
 		</div>
 	);

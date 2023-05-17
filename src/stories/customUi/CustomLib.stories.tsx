@@ -36,14 +36,16 @@ const Template = () => {
 			key: "PageHeader",
 			markup: PageHeader,
 			defaultProps: { span: 12, title: "default title" },
-			control: {
-				title: {
-					type: "MyInput",
+			control: [
+				{
+					label: "Name",
+					children: [{ label: "title", type: "MyInput" }],
 				},
-				span: {
-					type: "MySpanInput",
+				{
+					label: "Style",
+					children: [{ label: "span", type: "MySpanInput" }],
 				},
-			},
+			],
 		},
 		{
 			label: "NavBar",
@@ -109,25 +111,39 @@ const Template = () => {
 		);
 	};
 
-	const renderControlPanel = ({
-		editProps,
-		controlItems,
-		controlProps,
-		onChange,
-	}) => {
+	const renderControlPanel = ({ editProps, onChange }) => {
 		if (isEmpty(editProps)) return <div></div>;
 
+		console.log("editProps", editProps);
+
 		return (
-			<div className="flex flex-col gap-4">
-				{map(controlItems, (Item, index) => {
-					const ControlItem = controlProps?.[index];
+			<div className="flex flex-col gap-4 mt-1 border empty:border-none rounded-sm">
+				{map(editProps, (group, index) => {
+					if (isEmpty(group.children)) return null;
 					return (
-						<Item
-							key={ControlItem?.key}
-							label={ControlItem?.key}
-							value={ControlItem?.value}
-							onChange={(x) => onChange({ key: ControlItem?.key, value: x })}
-						/>
+						<div
+							key={`${group.label}-${index}`}
+							className="flex flex-col gap-4 pb-4"
+						>
+							<div className="bg-slate-100 p-2 px-4 text-sm text-slate-600 capitalize">
+								{group.label}
+							</div>
+							<div className="p-2 px-4 flex flex-col gap-4">
+								{map(group.children, (sub, index) => {
+									const DisplayControl = sub?.markup;
+									return (
+										<DisplayControl
+											key={`${sub?.type}-${index}`}
+											label={sub?.label}
+											value={sub?.value}
+											onChange={(x: string) =>
+												onChange({ key: sub?.label, value: x })
+											}
+										/>
+									);
+								})}
+							</div>
+						</div>
 					);
 				})}
 			</div>
@@ -151,9 +167,7 @@ const Template = () => {
 			>
 				<ComponentsLib className="w-[200px] border-none flex flex-col gap-2" />
 				<Whiteboard className="flex-1 max-w-[60vw]" />
-				<SenSorCenter className="flex-1 max-w-[300px] pl-4">
-					{renderControlPanel}
-				</SenSorCenter>
+				<SenSorCenter className="flex-1 max-w-[300px] pl-4" />
 			</Funzone>
 		</div>
 	);

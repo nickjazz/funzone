@@ -1,4 +1,6 @@
 import find from "lodash/find";
+import map from "lodash/map";
+import { StringInput, NumberInput, ObjectInput } from "../control";
 
 const hightLine = (item: HTMLElement, outline: HTMLDivElement) => {
 	const { width, height, x, y } = item.getBoundingClientRect();
@@ -9,6 +11,8 @@ const hightLine = (item: HTMLElement, outline: HTMLDivElement) => {
 	outline.classList.add(...styleList);
 
 	const child = Array.from(item.children);
+	if (!child) return;
+
 	child.forEach((c) => {
 		const isCol = c.getAttribute("data-fun-control");
 		cleanColControl();
@@ -55,8 +59,68 @@ const findFunItem = (e: {
 };
 
 const findControlByType = (ui, type) => {
-	const control = find(ui, ["label", type])?.control || {};
+	const control = find(ui, ["key", type])?.control || {};
 	return control;
+};
+
+const getControlByValue = (x: any) => {
+	const typeIs = typeof x;
+	let Element = StringInput;
+
+	switch (typeIs) {
+		case "string":
+			Element = StringInput;
+			break;
+		case "number":
+			Element = NumberInput;
+			break;
+		case "object":
+			Element = ObjectInput;
+			break;
+		default:
+			break;
+	}
+
+	return {
+		markup: Element,
+		type: typeIs,
+	};
+};
+
+const getControlItems = (xs) => {
+	const next = map(xs, (value, key: string) => {
+		const { markup, type } = getControlByValue(value);
+		return {
+			label: key,
+			type,
+			value,
+			markup,
+		};
+	});
+	return next;
+};
+
+const getCustomControl = (xs, allControl, defaultProps) => {
+	const next = map(xs, (value) => {
+		const child = map(value.children, (x) => {
+			const markup = allControl[x.type]?.markup;
+
+			// return row
+			return {
+				label: x.label,
+				value: defaultProps?.[x?.label],
+				markup,
+			};
+		});
+
+		// return group
+		return {
+			...value,
+			children: [...child],
+		};
+	});
+
+	return next;
 };
 
 export {
@@ -67,4 +131,6 @@ export {
 	findControlByType,
 	resizeOut,
 	reLocate,
+	getControlItems,
+	getCustomControl,
 };

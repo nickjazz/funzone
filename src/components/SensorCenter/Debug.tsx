@@ -1,5 +1,5 @@
 import React from "react";
-const Debug = ({ hover, editId, editProps, handleChange, handleSave }) => {
+const Debug = ({ hover, editId, editProps }) => {
 	return (
 		<>
 			<div className="flex gap-4 items-center">
@@ -16,17 +16,20 @@ const Debug = ({ hover, editId, editProps, handleChange, handleSave }) => {
 			</div>
 
 			{/* props */}
-			<textarea
+			<pre className="text-xs border p-4">
+				{JSON.stringify(editProps, undefined, 2)}
+			</pre>
+			{/* <textarea
 				value={JSON.stringify(editProps, undefined, 2)}
 				onChange={handleChange}
 				className="w-full border min-h-[200px] p-2 text-xs font-mono"
-			/>
-			<div
+			/> */}
+			{/* <div
 				onClick={handleSave}
 				className=" cursor-pointer py-2 px-5 text-xs inline-block rounded-sm bg-sky-500 hover:bg-sky-600 text-white"
 			>
 				save
-			</div>
+			</div> */}
 		</>
 	);
 };

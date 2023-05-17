@@ -3,6 +3,7 @@ import cx from "classnames";
 import debounce from "lodash/debounce";
 import { useDndMonitor } from "@dnd-kit/core";
 import map from "lodash/map";
+import isEmpty from "lodash/isEmpty";
 import { set } from "dot-prop-immutable";
 import {
 	hightLine,
@@ -10,10 +11,11 @@ import {
 	resizeOut,
 	reLocate,
 	findControlByType,
+	getControlItems,
+	getCustomControl,
 } from "./utils";
 import { context } from "../FunzoneContext";
 import Debug from "./Debug";
-import { StringInput, NumberInput, ObjectInput } from "../control";
 
 interface IFSensorCenter {
 	className?: string;
@@ -25,19 +27,19 @@ interface IFObject {
 	[key: string]: any;
 }
 
-const warningLog: string[] = [];
-
 const SensorCenter = ({
 	className,
 	debug = false,
 	children,
 }: IFSensorCenter) => {
+	const editingOut = useRef<HTMLDivElement | null>(null);
 	const out = useRef<HTMLDivElement | null>(null);
 	const { control, items, setItems, ui } = useContext(context);
 	const [isDragging, setIsDragging] = useState(false);
 	const [hover, setHover] = useState<IFObject>({});
-	const [editProps, setEditProps] = useState<IFObject>({});
-	const [editControl, setEditControl] = useState<IFObject>({});
+	const [editProps, setEditProps] = useState<IFObject[]>([
+		{ label: "properties", children: [] },
+	]);
 	const [editId, setEditId] = useState("");
 
 	// watch dnd event
@@ -78,25 +80,6 @@ const SensorCenter = ({
 		hightLine(element, outline);
 	}, 300);
 
-	const cleanUp = () => {
-		setEditId("");
-		setEditProps({});
-		setEditControl({});
-		setHover({});
-	};
-
-	const handleClick = (e) => {
-		const { id } = findFunItem(e);
-		if (!id || !items) return;
-		const props = items?.[id]?.props || {};
-		// this type have custom contro ?
-		const controlGroup = findControlByType(ui, items?.[id]?.type);
-
-		setEditId(id);
-		setEditProps(props);
-		setEditControl(controlGroup);
-	};
-
 	/**
 	 * Add click and mouseover event listener
 	 */
@@ -115,7 +98,7 @@ const SensorCenter = ({
 	 * Watch Edit dom, sync this size to outline wrapper
 	 */
 	useEffect(() => {
-		const watchItem = document.querySelector(`[data-id="${editId}"]`);
+		const watchItem = document.querySelector(`[data-id="${hover.id}"]`);
 
 		const resizeOb = new ResizeObserver((entries) => {
 			// since we are observing only a single element, so we access the first element in entries array
@@ -128,6 +111,30 @@ const SensorCenter = ({
 			});
 			reLocate({
 				item: out.current,
+				x,
+				y,
+			});
+		});
+
+		if (!watchItem) return;
+		resizeOb.observe(watchItem);
+		return () => resizeOb.unobserve(watchItem);
+	}, [hover.id, isDragging]);
+
+	useEffect(() => {
+		const watchItem = document.querySelector(`[data-id="${editId}"]`);
+
+		const resizeOb = new ResizeObserver((entries) => {
+			// since we are observing only a single element, so we access the first element in entries array
+			let rect = entries[0].contentRect;
+			const { x, y } = watchItem?.getBoundingClientRect();
+			resizeOut({
+				item: editingOut.current,
+				width: rect.width,
+				height: rect.height,
+			});
+			reLocate({
+				item: editingOut.current,
 				x,
 				y,
 			});
@@ -150,62 +157,63 @@ const SensorCenter = ({
 				const { x, y, width, height } = hoverDom.getBoundingClientRect();
 				reLocate({ item: out.current, x, y });
 			}
+
+			const editDom = document.querySelector(
+				`[data-id="${editId}"]`
+			) as HTMLElement;
+			if (editDom) {
+				const { x, y, width, height } = editDom.getBoundingClientRect();
+				reLocate({ item: editingOut.current, x, y });
+			}
 		};
 
 		document.addEventListener("scroll", syncEditPosition);
 		return () => document.removeEventListener("scroll", syncEditPosition);
 	}, [editId, hover.id]);
 
-	const handleChange = (e) => {
-		setEditProps(JSON.parse(e.target.value));
+	const cleanUp = () => {
+		setEditId("");
+		setEditProps([{ label: "properties", children: [] }]);
+		setHover({});
 	};
 
-	const handleSave = () => {
-		if (!editId || !setItems) return;
-		setItems((prev) => set(prev, `${editId}.props`, editProps));
+	const handleClick = (e) => {
+		const { id } = findFunItem(e);
+		if (!id || !items) return;
+		const props = items?.[id]?.props || {};
+		// this type have custom control ?
+		const controlGroup = findControlByType(ui, items?.[id]?.type);
+		const editItem = document.querySelector(
+			`[data-id="${id}"]`
+		) as HTMLDivElement;
+		hightLine(editItem, editingOut.current);
+
+		setEditId(id);
+		setEditProps(() => {
+			if (!isEmpty(controlGroup))
+				return [...getCustomControl(controlGroup, control, props)];
+			else
+				return [
+					{
+						label: "properties",
+						children: [...getControlItems(props)],
+					},
+				];
+		});
 	};
+
+	// const handleChange = (e) => {
+	// 	setEditProps(JSON.parse(e.target.value));
+	// };
+
+	// const handleSave = () => {
+	// 	if (!editId || !setItems) return;
+	// 	setItems((prev) => set(prev, `${editId}.props`, editProps));
+	// };
 
 	const handleControlChange = ({ key, value }: { key: string; value: any }) => {
 		if (!key || !setItems) return;
 		setItems((prev) => set(prev, `${editId}.props.${key}`, value));
-	};
-
-	const getControlByValue = (x: any, key: string) => {
-		const typeIs = typeof x;
-		let Element = StringInput;
-		const custom = editControl[key]?.type;
-
-		if (control?.[custom]) {
-			Element = control?.[custom]?.markup;
-			return Element;
-		} else if (custom && !control?.[custom] && !warningLog.includes(custom)) {
-			warningLog.push(custom);
-			console.warn(`[${key}] missing control component with name: ${custom}`);
-		}
-
-		switch (typeIs) {
-			case "string":
-				Element = StringInput;
-				break;
-			case "number":
-				Element = NumberInput;
-				break;
-			case "object":
-				Element = ObjectInput;
-				break;
-			default:
-				break;
-		}
-
-		return Element;
-	};
-
-	const getControlItems = () => {
-		const next = map(editProps, (value, key) => {
-			const DisplayControl = getControlByValue(value, key);
-			return DisplayControl;
-		});
-		return next;
 	};
 
 	const getControlProps = () => {
@@ -224,25 +232,40 @@ const SensorCenter = ({
 						hover={hover}
 						editProps={editProps}
 						editId={editId}
-						handleChange={handleChange}
-						handleSave={handleSave}
+						// handleChange={handleChange}
+						// handleSave={handleSave}
 					/>
 				)}
 
 				{/* control */}
 				{!children && (
-					<div className="mt-6 flex flex-col gap-4">
-						{map(editProps, (value, key) => {
-							const DisplayControl = getControlByValue(value, key);
+					<div className=" flex flex-col gap-4 border empty:border-none">
+						{map(editProps, (group, index) => {
+							if (isEmpty(group.children)) return null;
 							return (
-								<DisplayControl
-									key={key}
-									label={key}
-									value={value}
-									onChange={(x: string) =>
-										handleControlChange({ key, value: x })
-									}
-								/>
+								<div
+									key={`${group.label}-${index}`}
+									className="flex flex-col gap-4 pb-4"
+								>
+									<div className="bg-slate-100 p-2 px-4 text-sm text-slate-600 capitalize">
+										{group.label}
+									</div>
+									<div className="p-2 px-4 flex flex-col gap-4">
+										{map(group.children, (sub, index) => {
+											const DisplayControl = sub?.markup;
+											return (
+												<DisplayControl
+													key={`${sub?.type}-${index}`}
+													label={sub?.label}
+													value={sub?.value}
+													onChange={(x: string) =>
+														handleControlChange({ key: sub?.label, value: x })
+													}
+												/>
+											);
+										})}
+									</div>
+								</div>
 							);
 						})}
 					</div>
@@ -251,15 +274,18 @@ const SensorCenter = ({
 				{children &&
 					children({
 						editProps,
-						controlItems: getControlItems(),
-						controlProps: getControlProps(),
 						onChange: handleControlChange,
 					})}
 			</div>
 
 			<div
+				ref={editingOut}
+				className={"fixed  pointer-events-none cursor-none border-green-500/80"}
+			/>
+
+			<div
 				ref={out}
-				className={"fixed pointer-events-none cursor-none border-blue-600/60"}
+				className={"fixed  pointer-events-none cursor-none border-blue-600/60"}
 			/>
 		</>
 	);
