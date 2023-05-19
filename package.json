@@ -1,6 +1,6 @@
 {
 	"name": "funzone",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "A tool for drag-and-drop UI editing can be translated Such a tool allows users to intuitively drag and drop components on a graphical interface.",
 	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",

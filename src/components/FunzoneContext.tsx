@@ -13,7 +13,7 @@ interface IFContent {
 	control?: any;
 	onRemove?: ({ type, id }: { type: string; id: string }) => void;
 	onClick?: (id: string) => void;
-	afterChanged?: (id: string) => void;
+	afterChanged?: () => void;
 	renderRowHandler?: ({
 		handlerProps,
 		isCol,
