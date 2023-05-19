@@ -187,11 +187,14 @@ const useFun = () => {
 		setCols((prev) => {
 			return map(prev, (x, index) => {
 				if (index === rowIndex) {
-					if (x.includes(activeId)) return x;
+					let next = x;
+					if (next.includes(activeId)) {
+						next = x.filter((item) => item !== activeId);
+					}
 					return [
-						...x.slice(0, colIndex),
+						...next.slice(0, colIndex),
 						activeId,
-						...x.slice(colIndex, prev[rowIndex].length),
+						...next.slice(colIndex, prev[rowIndex].length),
 					];
 				} else {
 					return x.filter((item) => item !== activeId);

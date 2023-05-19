@@ -40,7 +40,7 @@ const reLocate = ({ item, x, y }) => {
 
 const cleanColControl = () => {
 	const items = document.querySelectorAll("[data-fun-control='col']");
-	if (!item) return;
+	if (!items) return;
 
 	items.forEach((item) => {
 		item.classList.remove("opacity-100");
