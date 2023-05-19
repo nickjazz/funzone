@@ -81,8 +81,9 @@ const Funzone = ({
 		map(schema, (x) => {
 			_rows.push(x.id);
 
-			_cols.push([...x?.children?.map((xc) => xc.id)]);
+			_cols.push([...x?.children?.map((xc) => xc?.id)]);
 			map(x?.children, (item) => {
+				if (!item?.id) return;
 				_items[item.id] = item;
 			});
 		});
