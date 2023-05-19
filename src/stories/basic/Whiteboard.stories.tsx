@@ -1,5 +1,4 @@
 import React from "react";
-import { List } from "antd";
 import {
 	Whiteboard,
 	ComponentsLib,
@@ -7,7 +6,6 @@ import {
 	SenSorCenter,
 } from "../../components";
 import { NavBar, PageHeader, Form } from "../../components/AntdComponent";
-import "antd/dist/reset.css";
 import schame from "./schema3.json";
 
 export default {
@@ -42,13 +40,7 @@ const Template = () => {
 			markup: NavBar,
 			defaultProps: { span: 12 },
 		},
-		{
-			label: "List",
-			group: "inline",
-			key: "List",
-			markup: List,
-			defaultProps: { span: 12 },
-		},
+
 		{
 			label: "Form",
 			group: "inline",

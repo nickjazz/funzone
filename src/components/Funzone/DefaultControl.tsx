@@ -15,7 +15,7 @@ const DefaultRowControl = ({ handlerProps, type, id }) => {
 				<Trash className="text-gray-500 w-6 h-6 py-1.5 px-1.5 cursor-pointer" />
 			</div>
 			<div
-				className="absolute flex cursor-grab rounded-r-lg pt-2 justify-center items-start w-6 -right-6 -top-[1px] h-full bg-slate-200/40 hover:bg-slate-300/60"
+				className="absolute group-hover:opacity-100  flex cursor-grab rounded-r-lg pt-2 justify-center items-start w-6 -right-6 -top-[1px] h-full bg-slate-200/30 hover:bg-slate-300/60 opacity-20 hover:opacity-100"
 				{...handlerProps}
 			>
 				<DragIcon />

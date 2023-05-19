@@ -1,5 +1,4 @@
 import React from "react";
-import { Typography, List } from "antd";
 import map from "lodash/map";
 import isEmpty from "lodash/isEmpty";
 import cx from "classnames";
@@ -10,7 +9,6 @@ import {
 	SenSorCenter,
 } from "../../components";
 import { NavBar, PageHeader, Form } from "../../components/AntdComponent";
-import "antd/dist/reset.css";
 import schame from "./schema2.json";
 import { MyInput, MySpanInput } from "../../components/customControl";
 
@@ -53,13 +51,6 @@ const Template = () => {
 			key: "NavBar",
 			markup: NavBar,
 			defaultProps: { span: 12 },
-		},
-		{
-			label: "List",
-			group: "inline",
-			key: "List",
-			markup: List,
-			defaultProps: { span: 3 },
 		},
 		{
 			label: "Form",
