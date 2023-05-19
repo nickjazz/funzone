@@ -3,7 +3,9 @@ import map from "lodash/map";
 import { StringInput, NumberInput, ObjectInput } from "../control";
 
 const hightLine = (item: HTMLElement, outline: HTMLDivElement) => {
-	const { width, height, x, y } = item.getBoundingClientRect();
+	if (!item) return;
+
+	const { width, height, x, y } = item?.getBoundingClientRect();
 	resizeOut({ item: outline, width, height });
 	reLocate({ item: outline, x, y });
 
@@ -24,17 +26,22 @@ const hightLine = (item: HTMLElement, outline: HTMLDivElement) => {
 };
 
 const resizeOut = ({ item, width, height }) => {
+	if (!item) return;
 	item.style.width = `${width}px`;
 	item.style.height = `${height}px`;
 };
 
 const reLocate = ({ item, x, y }) => {
+	if (!item) return;
+
 	item.style.top = `${y}px`;
 	item.style.left = `${x}px`;
 };
 
 const cleanColControl = () => {
 	const items = document.querySelectorAll("[data-fun-control='col']");
+	if (!item) return;
+
 	items.forEach((item) => {
 		item.classList.remove("opacity-100");
 		item.classList.add("opacity-0");
