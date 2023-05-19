@@ -34,8 +34,7 @@ const SensorCenter = ({
 }: IFSensorCenter) => {
 	const editingOut = useRef<HTMLDivElement | null>(null);
 	const out = useRef<HTMLDivElement | null>(null);
-	const { control, items, setItems, ui } = useContext(context);
-	const [isDragging, setIsDragging] = useState(false);
+	const { control, items, setItems, ui, afterChanged } = useContext(context);
 	const [hover, setHover] = useState<IFObject>({});
 	const [editProps, setEditProps] = useState<IFObject[]>([
 		{ label: "properties", children: [] },
@@ -45,8 +44,6 @@ const SensorCenter = ({
 	// watch dnd event
 	useDndMonitor({
 		onDragStart() {
-			setIsDragging(true);
-			cleanUp();
 			reLocate({
 				item: out.current,
 				x: -10000,
@@ -57,9 +54,6 @@ const SensorCenter = ({
 				width: 0,
 				height: 0,
 			});
-		},
-		onDragEnd() {
-			setIsDragging(false);
 		},
 	});
 
@@ -76,7 +70,7 @@ const SensorCenter = ({
 		if (!size) return;
 		setHover(size);
 
-		if (!outline || !element || isDragging) return;
+		if (!outline || !element) return;
 		hightLine(element, outline);
 	}, 300);
 
@@ -85,14 +79,14 @@ const SensorCenter = ({
 	 */
 	useEffect(() => {
 		const funZone = document.querySelector("body");
-		if (!funZone || isDragging) return;
+		if (!funZone) return;
 		funZone?.addEventListener("mouseover", handleMouseOver, false);
 		funZone?.addEventListener("click", handleClick);
 		return () => {
 			funZone.removeEventListener("mouseover", handleMouseOver, false);
 			funZone.removeEventListener("click", handleClick);
 		};
-	}, [items, isDragging]);
+	}, [items]);
 
 	/**
 	 * Watch Edit dom, sync this size to outline wrapper
@@ -119,7 +113,7 @@ const SensorCenter = ({
 		if (!watchItem) return;
 		resizeOb.observe(watchItem);
 		return () => resizeOb.unobserve(watchItem);
-	}, [hover.id, isDragging]);
+	}, [hover.id]);
 
 	useEffect(() => {
 		const watchItem = document.querySelector(`[data-id="${editId}"]`);
@@ -143,7 +137,7 @@ const SensorCenter = ({
 		if (!watchItem) return;
 		resizeOb.observe(watchItem);
 		return () => resizeOb.unobserve(watchItem);
-	}, [editId, isDragging]);
+	}, [editId]);
 
 	/**
 	 * Watch Edit dom. sync this position to outline wrapper
@@ -171,11 +165,11 @@ const SensorCenter = ({
 		return () => document.removeEventListener("scroll", syncEditPosition);
 	}, [editId, hover.id]);
 
-	const cleanUp = () => {
-		setEditId("");
-		setEditProps([{ label: "properties", children: [] }]);
-		setHover({});
-	};
+	// const cleanUp = () => {
+	// 	setEditId("");
+	// 	setEditProps([{ label: "properties", children: [] }]);
+	// 	setHover({});
+	// };
 
 	const handleClick = (e) => {
 		const { id } = findFunItem(e);
@@ -214,13 +208,7 @@ const SensorCenter = ({
 	const handleControlChange = ({ key, value }: { key: string; value: any }) => {
 		if (!key || !setItems) return;
 		setItems((prev) => set(prev, `${editId}.props.${key}`, value));
-	};
-
-	const getControlProps = () => {
-		const next = map(editProps, (value, key) => {
-			return { value, key };
-		});
-		return next;
+		afterChanged();
 	};
 
 	return (

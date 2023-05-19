@@ -13,6 +13,7 @@ interface IFContent {
 	control?: any;
 	onRemove?: ({ type, id }: { type: string; id: string }) => void;
 	onClick?: (id: string) => void;
+	afterChanged?: (id: string) => void;
 	renderRowHandler?: ({
 		handlerProps,
 		isCol,
@@ -44,6 +45,8 @@ export const context = createContext<IFContent>({
 	ui: [],
 	onRemove: () => {},
 	onClick: () => {},
+	afterChanged: () => {},
 });
 
 export const Provider = context.Provider;
+export default context;

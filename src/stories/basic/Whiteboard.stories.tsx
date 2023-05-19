@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import {
 	Whiteboard,
 	ComponentsLib,
@@ -25,6 +25,7 @@ export default {
 const mockItems = schame;
 
 const Template = () => {
+	const [data, setData] = useState(mockItems);
 	const components = [
 		{
 			label: "PageHeader",
@@ -50,11 +51,17 @@ const Template = () => {
 		},
 	];
 
+	const handleChange = (e) => {
+		console.log("[handleChange]", e);
+		// setData(e);
+	};
+
 	return (
 		<div className="flex gap-10">
 			<Funzone
 				ui={components}
-				schema={mockItems}
+				schema={data}
+				onChange={handleChange}
 				// renderLibHandler={({ label }) => {
 				// 	return <div className="p-2 border bg-white">{label}</div>;
 				// }}

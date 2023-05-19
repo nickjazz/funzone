@@ -9,8 +9,7 @@ import {
 	MeasuringStrategy,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import orderBy from "lodash/orderBy";
-import map from "lodash/map";
+import isEqual from "lodash/isEqual";
 import { cond } from "lodash/fp";
 import { Provider } from "../FunzoneContext";
 import DisplayItem from "../DisplayItem";
@@ -21,12 +20,14 @@ import {
 	DefaultRowPlaceholder,
 } from "./DefaultControl";
 import useFun from "./useFun";
+import { schemaToFunzone, funzoneToSchema } from "./utils";
 
 interface IFFunzone {
 	children: any;
 	schema: any;
 	ui: any;
 	control?: any;
+	onChange?: (x: any) => void;
 	renderRowHandler?: ({ handlerProps, type, id }) => React.ReactElement;
 	renderColHandler?: ({ handlerProps, type, id }) => React.ReactElement;
 	renderLibHandler?: (...x) => React.ReactElement;
@@ -38,6 +39,7 @@ const Funzone = ({
 	schema,
 	ui,
 	control,
+	onChange = (e: any) => {},
 	renderRowHandler = DefaultRowControl,
 	renderColHandler = DefaultColControl,
 	renderLibHandler = DefaultLibControl,
@@ -74,20 +76,7 @@ const Funzone = ({
 	} = useFun();
 
 	useEffect(() => {
-		const _rows: React.SetStateAction<string[]> = [];
-		const _cols: string[][] = [];
-		const _items: { [x: string]: any } = {};
-
-		map(schema, (x) => {
-			_rows.push(x.id);
-
-			_cols.push([...x?.children?.map((xc) => xc?.id)]);
-			map(x?.children, (item) => {
-				if (!item?.id) return;
-				_items[item.id] = item;
-			});
-		});
-
+		const { rows: _rows, cols: _cols, items: _items } = schemaToFunzone(schema);
 		setRows(_rows);
 		setCols(_cols);
 		setItems(_items);
@@ -104,6 +93,15 @@ const Funzone = ({
 		})
 	);
 
+	const handleDragOver = (event) => {
+		cond([
+			[isNewSource, handleNewJoin],
+			[isDiff, handleMoveGrag],
+			[isDiffEmtpy, handleMoveGragRow],
+			[isOutSite, handleMoveOut],
+		])(event);
+	};
+
 	const handleDragEnd = (event) => {
 		cond([
 			[isChangeRow, handleSwithRow],
@@ -112,15 +110,12 @@ const Funzone = ({
 		])(event);
 		handleClean();
 		setActiveId(null);
+		afterChanged();
 	};
 
-	const handleDragOver = (event) => {
-		cond([
-			[isNewSource, handleNewJoin],
-			[isDiff, handleMoveGrag],
-			[isDiffEmtpy, handleMoveGragRow],
-			[isOutSite, handleMoveOut],
-		])(event);
+	const afterChanged = () => {
+		const next = funzoneToSchema(rows, cols, items);
+		onChange(next);
 	};
 
 	const value = useMemo(
@@ -131,6 +126,7 @@ const Funzone = ({
 			cols,
 			ui,
 			control,
+			afterChanged,
 			onRemove: handleRemove,
 			renderRowHandler,
 			renderColHandler,
