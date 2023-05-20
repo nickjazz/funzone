@@ -211,6 +211,12 @@ const SensorCenter = ({
 		afterChanged();
 	};
 
+	const handleTypeChange = (value: string) => {
+		if (!setItems) return;
+		setItems((prev) => set(prev, `${editId}.props.type`, value));
+		afterChanged();
+	};
+
 	return (
 		<>
 			<div className={cx("relataive", className)}>
@@ -263,6 +269,8 @@ const SensorCenter = ({
 					children({
 						editProps,
 						onChange: handleControlChange,
+						onTypeChange: handleTypeChange,
+						defaultValue: items?.[editId],
 					})}
 			</div>
 
