@@ -1,0 +1,12 @@
+[
+	{
+		"id": "001",
+		"type": "Repeater",
+		"props": {
+			"items": [
+				{ "id": "001-1", "type": "Input", "props": { "label": "label1" } },
+				{ "id": "002-2", "type": "Input", "props": { "label": "label2" } }
+			]
+		}
+	}
+]

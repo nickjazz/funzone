@@ -117,6 +117,9 @@ const getCustomControl = (xs, allControl, defaultProps) => {
 				label: x.label,
 				value: defaultProps?.[x?.label],
 				markup,
+				props: {
+					...x,
+				},
 			};
 		});
 
@@ -130,6 +133,11 @@ const getCustomControl = (xs, allControl, defaultProps) => {
 	return next;
 };
 
+const filterLastId = (x) => {
+	if (x?.split(".")?.length === 1) return x;
+	else return x?.split(".")?.pop();
+};
+
 export {
 	hightLine,
 	cleanColControl,
@@ -140,4 +148,5 @@ export {
 	reLocate,
 	getControlItems,
 	getCustomControl,
+	filterLastId,
 };

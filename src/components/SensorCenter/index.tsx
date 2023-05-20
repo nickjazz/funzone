@@ -13,6 +13,7 @@ import {
 	findControlByType,
 	getControlItems,
 	getCustomControl,
+	filterLastId,
 } from "./utils";
 import { context } from "../FunzoneContext";
 import Debug from "./Debug";
@@ -174,13 +175,16 @@ const SensorCenter = ({
 	const handleClick = (e) => {
 		const { id } = findFunItem(e);
 		if (!id || !items) return;
-		const props = items?.[id]?.props || {};
-		// this type have custom control ?
-		const controlGroup = findControlByType(ui, items?.[id]?.type);
+
 		const editItem = document.querySelector(
 			`[data-id="${id}"]`
 		) as HTMLDivElement;
 		hightLine(editItem, editingOut.current);
+
+		const trueId = filterLastId(id);
+		const props = items?.[trueId]?.props || {};
+		// this type have custom control ?
+		const controlGroup = findControlByType(ui, items?.[trueId]?.type);
 
 		setEditId(id);
 		setEditProps(() => {
@@ -207,13 +211,15 @@ const SensorCenter = ({
 
 	const handleControlChange = ({ key, value }: { key: string; value: any }) => {
 		if (!key || !setItems) return;
-		setItems((prev) => set(prev, `${editId}.props.${key}`, value));
+		setItems((prev) =>
+			set(prev, `${filterLastId(editId)}.props.${key}`, value)
+		);
 		afterChanged();
 	};
 
 	const handleTypeChange = (value: string) => {
 		if (!setItems) return;
-		setItems((prev) => set(prev, `${editId}.props.type`, value));
+		setItems((prev) => set(prev, `${filterLastId(editId)}.props.type`, value));
 		afterChanged();
 	};
 
@@ -270,7 +276,7 @@ const SensorCenter = ({
 						editProps,
 						onChange: handleControlChange,
 						onTypeChange: handleTypeChange,
-						defaultValue: items?.[editId],
+						defaultValue: items?.[filterLastId(editId)],
 					})}
 			</div>
 
