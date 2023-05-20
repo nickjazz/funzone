@@ -20,7 +20,7 @@ const schemaToFunzone = (xs) => {
 
 			map(item?.props.items, (x) => {
 				if (!x || !x.id) return;
-				item[x?.id] = x;
+				items[x?.id] = x;
 			});
 
 			items[item.id] = item;
