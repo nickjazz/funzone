@@ -7,9 +7,22 @@ const schemaToFunzone = (xs) => {
 
 	map(xs, (x) => {
 		rows.push(x.id);
+
+		// add row info
+		items[x.id] = x;
+
+		// add col (as a layout)
 		cols.push([...x?.children?.map((xc) => xc?.id)]);
+
+		// add nested
 		map(x?.children, (item) => {
 			if (!item?.id) return;
+
+			map(item?.props.items, (x) => {
+				if (!x || !x.id) return;
+				item[x?.id] = x;
+			});
+
 			items[item.id] = item;
 		});
 	});
@@ -24,12 +37,17 @@ const funzoneToSchema = (rows, cols, items) => {
 			children: map(cols[index], (col) => {
 				return {
 					id: col,
+					type: col?.type,
 					children: items[col],
+					props: items[col]?.props || {},
+					actions: items[col]?.actions || {},
 				};
 			}),
+			props: items[row]?.props,
+			actions: items[row]?.actions || {},
 		};
 	});
-	return next;
+	return [...next];
 };
 
 export { schemaToFunzone, funzoneToSchema };
