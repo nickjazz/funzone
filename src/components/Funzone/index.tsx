@@ -73,7 +73,7 @@ const Funzone = ({
 		handleMoveGragRow,
 		handleSwithRow,
 		handleMoveGrag,
-	} = useFun();
+	} = useFun(onChange);
 
 	useEffect(() => {
 		const { rows: _rows, cols: _cols, items: _items } = schemaToFunzone(schema);

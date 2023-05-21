@@ -53,7 +53,7 @@ const DefaultLibControl = ({ label }) => {
 
 const DefaultRowPlaceholder = () => {
 	return (
-		<div className="h-[45px] flex justify-center items-center text-blue-600/60 text-sm bg-sky-100/40 border-2 border-sky-500/20 border-dashed m-2 rounded-sm">
+		<div className="flex justify-center min-h-[45px] items-center text-blue-600/60 text-sm bg-sky-100/40 border-2 border-sky-500/20 border-dashed m-2 rounded-sm">
 			Drag the component here.
 		</div>
 	);

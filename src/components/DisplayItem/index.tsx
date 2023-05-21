@@ -7,9 +7,11 @@ const DisplayItem = ({ id }) => {
 	const type = rows.includes(id) ? "row" : items?.[id]?.type;
 
 	return (
-		<div className="bg-white shadow-lg relative min-h-[65px] flex justify-center items-center rounded-md border">
+		<div className="bg-white shadow-lg relative min-h-[65px] text-xs flex justify-center items-center rounded-md border">
 			{/* <Markup {...props} /> */}
-			{type}
+			<span className="border rounded-full py-1 px-4 border-gray-300">
+				{type}
+			</span>
 		</div>
 	);
 };

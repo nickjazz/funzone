@@ -8,7 +8,7 @@ import {
 	Funzone,
 	SenSorCenter,
 } from "../../components";
-import { NavBar, PageHeader, Form } from "../../components/AntdComponent";
+import { NavBar, PageHeader, Form } from "../../components/CustomComponent";
 import schame from "./schema2.json";
 import { MyInput, MySpanInput } from "../../components/customControl";
 

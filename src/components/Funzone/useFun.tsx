@@ -1,14 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import map from "lodash/map";
+import isEmpty from "lodash/isEmpty";
 import { nanoid } from "nanoid";
 import { arrayMove } from "@dnd-kit/sortable";
 import dotProp from "dot-prop-immutable";
+import { funzoneToSchema } from "./utils";
 
-const useFun = () => {
+const useFun = (onChange) => {
 	const [cols, setCols] = useState<string[][]>([]);
 	const [items, setItems] = useState<any>({});
 	const [rows, setRows] = useState<string[]>([]);
 	const [activeId, setActiveId] = useState(null);
+
+	useEffect(() => {
+		const next = funzoneToSchema(rows, cols, items);
+		if (isEmpty(next)) return;
+		onChange(next);
+	}, [rows, cols, items]);
 
 	const findRowIndex = (colId: string) => {
 		let index = -1;

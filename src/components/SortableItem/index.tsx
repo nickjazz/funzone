@@ -78,7 +78,7 @@ const SortableItem = ({
 			className={cx(
 				" scale-100  group relative border border-transparent bg-white",
 				{ "bg-sky-200p-4  hover:z-50 ": isCol },
-				{ "min-h-[65px]": isRow },
+				{ "min-h-[65px]": isRow && !children },
 				{
 					"dragOverlay shadow-[-1px_-1px_11px_#00000021] z-50 opacity-50 scale-[1.02]":
 						isDragging,

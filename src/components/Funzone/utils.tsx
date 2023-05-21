@@ -32,19 +32,22 @@ const schemaToFunzone = (xs) => {
 
 const funzoneToSchema = (rows, cols, items) => {
 	const next = map(rows, (row, index) => {
+		const rowItem = items?.[row];
+
 		return {
 			id: row,
 			children: map(cols[index], (col) => {
+				const colItem = items?.[col];
 				return {
 					id: col,
-					type: col?.type,
-					children: items[col],
-					props: items[col]?.props || {},
-					actions: items[col]?.actions || {},
+					type: colItem?.type,
+					children: colItem,
+					props: colItem?.props || {},
+					actions: colItem?.actions || {},
 				};
 			}),
-			props: items[row]?.props,
-			actions: items[row]?.actions || {},
+			props: rowItem?.props,
+			actions: rowItem?.actions || {},
 		};
 	});
 	return [...next];

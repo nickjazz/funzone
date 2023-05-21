@@ -1,11 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
 	Whiteboard,
 	ComponentsLib,
 	Funzone,
 	SenSorCenter,
 } from "../../components";
-import { NavBar, PageHeader, Form } from "../../components/AntdComponent";
+import { NavBar, PageHeader, Form } from "../../components/CustomComponent";
 import schame from "./schema3.json";
 
 export default {
@@ -26,6 +26,7 @@ const mockItems = schame;
 
 const Template = () => {
 	const [data, setData] = useState(mockItems);
+	const [next, setNext] = useState(mockItems);
 	const components = [
 		{
 			label: "PageHeader",
@@ -53,25 +54,12 @@ const Template = () => {
 
 	const handleChange = (e) => {
 		console.log("[handleChange]", e);
-		// setData(e);
+		setNext(e);
 	};
 
 	return (
 		<div className="flex gap-10">
-			<Funzone
-				ui={components}
-				schema={data}
-				onChange={handleChange}
-				// renderLibHandler={({ label }) => {
-				// 	return <div className="p-2 border bg-white">{label}</div>;
-				// }}
-				// renderRowHandler={({ handlerProps }) => {
-				// 	return <div {...handlerProps}>row handler</div>;
-				// }}
-				// renderColHandler={({ handlerProps, ...res }) => {
-				// 	return <div {...handlerProps}>col handler</div>;
-				// }}
-			>
+			<Funzone ui={components} schema={data} onChange={handleChange}>
 				<ComponentsLib className="w-[200px]" />
 				<Whiteboard className="flex-1 max-w-[60vw]" />
 				<SenSorCenter className="flex-1 max-w-[300px]" />
