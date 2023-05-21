@@ -2,6 +2,8 @@
 
 Just another web builder.
 
+![capture](./capture.gif)
+
 ### Feature
 
 - Customizing and expanding UI modules (view)
