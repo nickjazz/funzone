@@ -17,6 +17,7 @@ import {
 } from "./utils";
 import { context } from "../FunzoneContext";
 import Debug from "./Debug";
+import classNames from "classnames";
 
 interface IFSensorCenter {
 	className?: string;
@@ -35,8 +36,10 @@ const SensorCenter = ({
 }: IFSensorCenter) => {
 	const editingOut = useRef<HTMLDivElement | null>(null);
 	const out = useRef<HTMLDivElement | null>(null);
-	const { control, items, setItems, ui, afterChanged } = useContext(context);
+	const { control, items, setItems, ui, afterChanged, theme } =
+		useContext(context);
 	const [hover, setHover] = useState<IFObject>({});
+	const [move, setMove] = useState<boolean>(false);
 	const [editProps, setEditProps] = useState<IFObject[]>([
 		{ label: "properties", children: [] },
 	]);
@@ -45,6 +48,7 @@ const SensorCenter = ({
 	// watch dnd event
 	useDndMonitor({
 		onDragStart() {
+			setMove(true);
 			reLocate({
 				item: out.current,
 				x: -10000,
@@ -55,6 +59,9 @@ const SensorCenter = ({
 				width: 0,
 				height: 0,
 			});
+		},
+		onDragEnd() {
+			setMove(false);
 		},
 	});
 
@@ -280,15 +287,25 @@ const SensorCenter = ({
 					})}
 			</div>
 
-			<div
-				ref={editingOut}
-				className={"fixed  pointer-events-none cursor-none border-green-500/80"}
-			/>
+			{!move && (
+				<div
+					ref={editingOut}
+					className={classNames(
+						"fixed border-2 pointer-events-none cursor-none border-green-500/80",
+						theme?.editFrameBorder
+					)}
+				/>
+			)}
 
-			<div
-				ref={out}
-				className={"fixed  pointer-events-none cursor-none border-blue-600/60"}
-			/>
+			{!move && (
+				<div
+					ref={out}
+					className={classNames(
+						"fixed pointer-events-none cursor-none border-blue-600/60",
+						theme?.hoverFrameBorder
+					)}
+				/>
+			)}
 		</>
 	);
 };

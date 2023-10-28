@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, Children } from "react";
 import cx from "classnames";
 import map from "lodash/map";
 import find from "lodash/find";
@@ -13,10 +13,23 @@ import SortableItem from "../SortableItem";
 
 interface IFWhiteBoard {
 	className: string;
+	children?: (
+		handleAddRow: () => void,
+		handleAddCol: (x: any) => void
+	) => React.ReactNode;
 }
 
-const Whiteboard = ({ className }: IFWhiteBoard) => {
-	const { rows, items, cols, ui, renderRowPlaceholder } = useContext(context);
+const Whiteboard = ({ className, children }: IFWhiteBoard) => {
+	const {
+		rows,
+		items,
+		cols,
+		ui,
+		renderRowPlaceholder,
+		handleAddRow,
+		handleAddCol,
+	} = useContext(context);
+
 	const { setNodeRef, isOver, active } = useDroppable({
 		id: "root",
 	});
@@ -37,7 +50,6 @@ const Whiteboard = ({ className }: IFWhiteBoard) => {
 								type="col"
 								id={x}
 								width={props?.span}
-								isNew={props?._temp}
 							>
 								{/* {type} */}
 								{Markup && <Markup {...props} />}
@@ -52,7 +64,7 @@ const Whiteboard = ({ className }: IFWhiteBoard) => {
 	return (
 		<div
 			className={cx(
-				"min-h-[1200px] relative border rounded-sm transition-all",
+				" relative rounded-sm transition-all",
 				{ "border-sky-400": isOver },
 				className
 			)}
@@ -73,6 +85,10 @@ const Whiteboard = ({ className }: IFWhiteBoard) => {
 					);
 				})}
 			</SortableContext>
+
+			<div className="relative z-20">
+				{children && children?.(handleAddRow, handleAddCol)}
+			</div>
 		</div>
 	);
 };

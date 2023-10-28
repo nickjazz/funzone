@@ -1,0 +1,22 @@
+{
+	"plugins": [
+		"@semantic-release/commit-analyzer",
+		"@semantic-release/release-notes-generator",
+		[
+			"@saithodev/semantic-release-backmerge",
+			{
+				"backmergeBranches": [
+					"dev"
+				],
+				"plugins": [
+					[
+						"@semantic-release/exec",
+						{
+							"successCmd": "echo 'Version in master is ${nextRelease.version}' > test.txt && git add test.txt"
+						}
+					]
+				]
+			}
+		]
+	]
+}

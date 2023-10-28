@@ -1,20 +1,13 @@
 import React from "react";
-import map from "lodash/map";
-import isEmpty from "lodash/isEmpty";
 import cx from "classnames";
-import {
-	Whiteboard,
-	ComponentsLib,
-	Funzone,
-	SenSorCenter,
-} from "../../components";
+import { Funzone, FunBoard, FunSensor, FunComponents } from "../../components";
 import { NavBar, PageHeader, Form } from "../../components/CustomComponent";
 import schame from "./schema2.json";
 import { MyInput, MySpanInput } from "../../components/customControl";
 
 export default {
 	title: "Custom Component",
-	component: Whiteboard,
+	component: Funzone,
 };
 
 /**
@@ -95,45 +88,6 @@ const Template = () => {
 		);
 	};
 
-	const renderControlPanel = ({ editProps, onChange }) => {
-		if (isEmpty(editProps)) return <div></div>;
-
-		console.log("editProps", editProps);
-
-		return (
-			<div className="flex flex-col gap-4 mt-1 border empty:border-none rounded-sm">
-				{map(editProps, (group, index) => {
-					if (isEmpty(group.children)) return null;
-					return (
-						<div
-							key={`${group.label}-${index}`}
-							className="flex flex-col gap-4 pb-4"
-						>
-							<div className="bg-slate-100 p-2 px-4 text-sm text-slate-600 capitalize">
-								{group.label}
-							</div>
-							<div className="p-2 px-4 flex flex-col gap-4">
-								{map(group.children, (sub, index) => {
-									const DisplayControl = sub?.markup;
-									return (
-										<DisplayControl
-											key={`${sub?.type}-${index}`}
-											label={sub?.label}
-											value={sub?.value}
-											onChange={(x: string) =>
-												onChange({ key: sub?.label, value: x })
-											}
-										/>
-									);
-								})}
-							</div>
-						</div>
-					);
-				})}
-			</div>
-		);
-	};
-
 	return (
 		<div className="flex gap-6">
 			<Funzone
@@ -141,20 +95,13 @@ const Template = () => {
 				control={controlComponents}
 				schema={schame}
 				renderLibHandler={LibItem}
-				// renderRowHandler={({ handlerProps }) => {
-				// 	return <div {...handlerProps}>row handler</div>;
-				// }}
-				// renderColHandler={({ handlerProps, ...res }) => {
-				// 	return <div {...handlerProps}>col handler</div>;
-				// }}
 				renderRowPlaceholder={RowPlaceholder}
 			>
-				<ComponentsLib className="w-[200px] border-none flex flex-col gap-2" />
-				<Whiteboard className="flex-1 max-w-[60vw]" />
-				<SenSorCenter className="flex-1 max-w-[300px] pl-4" />
+				<FunComponents className="w-[200px] border-none flex flex-col gap-2" />
+				<FunBoard className="flex-1 max-w-[60vw] my-4 rounded-sm bg-slate-100"></FunBoard>
+				<FunSensor className="flex-1 max-w-[300px] pl-4" />
 			</Funzone>
 		</div>
 	);
 };
-
 export const Primary = Template.bind({});

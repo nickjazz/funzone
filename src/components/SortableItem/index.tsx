@@ -16,14 +16,9 @@ function animateLayoutChanges(args: any) {
 	return true;
 }
 
-const SortableItem = ({
-	id,
-	type,
-	children = null,
-	isNew = false,
-	width = "auto",
-}) => {
-	const { renderColHandler, renderRowHandler, onRemove } = useContext(context);
+const SortableItem = ({ id, type, children = null, width = "auto" }) => {
+	const { renderColHandler, renderRowHandler, onRemove, theme } =
+		useContext(context);
 	const mounted = useMountStatus();
 
 	const {
@@ -77,7 +72,6 @@ const SortableItem = ({
 			style={style}
 			className={cx(
 				" scale-100  group relative border border-transparent bg-white",
-				{ "bg-sky-200p-4  hover:z-50 ": isCol },
 				{ "min-h-[65px]": isRow && !children },
 				{
 					"dragOverlay shadow-[-1px_-1px_11px_#00000021] z-50 opacity-50 scale-[1.02]":
@@ -85,7 +79,7 @@ const SortableItem = ({
 				},
 				{ "px-3 py-2 border border-slate-200": type === "source" },
 				{ "fade-in": mountedWhileDragging },
-				{ "border-yellow-500": isNew }
+				theme?.row
 			)}
 		>
 			{children}

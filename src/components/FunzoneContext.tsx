@@ -10,6 +10,7 @@ interface IFContent {
 	setItems?: React.Dispatch<React.SetStateAction<string>>;
 	cols?: any;
 	ui?: any;
+	theme?: any;
 	control?: any;
 	onRemove?: ({ type, id }: { type: string; id: string }) => void;
 	onClick?: (id: string) => void;
@@ -36,6 +37,8 @@ interface IFContent {
 	}) => React.ReactElement;
 	renderRowPlaceholder?: (x: any) => React.ReactElement;
 	renderLibHandler?: (x: any) => React.ReactElement;
+	handleAddRow?: () => void;
+	handleAddCol?: (x: any) => void;
 }
 
 export const context = createContext<IFContent>({
@@ -46,6 +49,9 @@ export const context = createContext<IFContent>({
 	onRemove: () => {},
 	onClick: () => {},
 	afterChanged: () => {},
+	handleAddRow: () => {},
+	handleAddCol: () => {},
+	theme: {},
 });
 
 export const Provider = context.Provider;
