@@ -1,16 +1,11 @@
 import React, { useState } from "react";
-import {
-	Whiteboard,
-	ComponentsLib,
-	Funzone,
-	SenSorCenter,
-} from "../../components";
+import { Funzone, FunBoard, FunSensor, FunComponents } from "../../components";
 import { NavBar, PageHeader, Form } from "../../components/CustomComponent";
 import schame from "./schema3.json";
 
 export default {
 	title: "Whiteboard",
-	component: Whiteboard,
+	component: Funzone,
 };
 
 /**
@@ -60,9 +55,9 @@ const Template = () => {
 	return (
 		<div className="flex gap-10">
 			<Funzone ui={components} schema={data} onChange={handleChange}>
-				<ComponentsLib className="w-[200px]" />
-				<Whiteboard className="flex-1 max-w-[60vw]" />
-				<SenSorCenter className="flex-1 max-w-[300px]" />
+				<FunComponents className="w-[200px] border-none flex flex-col gap-2" />
+				<FunBoard className="flex-1 max-w-[60vw] my-4 rounded-sm bg-slate-100" />
+				<FunSensor className="flex-1 max-w-[300px] pl-4" />
 			</Funzone>
 		</div>
 	);

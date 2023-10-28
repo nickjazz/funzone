@@ -3,7 +3,6 @@ import map from "lodash/map";
 import isEmpty from "lodash/isEmpty";
 import { nanoid } from "nanoid";
 import { arrayMove } from "@dnd-kit/sortable";
-import dotProp from "dot-prop-immutable";
 import { funzoneToSchema } from "./utils";
 
 const useFun = (onChange) => {
@@ -33,7 +32,7 @@ const useFun = (onChange) => {
 		return {
 			id,
 			item: {
-				[id]: { type, props: Object.assign({}, initProps, { _temp: true }) },
+				[id]: { type, props: Object.assign({}, initProps) },
 			},
 		};
 	};
@@ -139,8 +138,6 @@ const useFun = (onChange) => {
 	};
 
 	const handleSwithRow = ({ active, over }) => {
-		console.log("[handleSwithRow ]", active, over);
-
 		setRows((prev) => {
 			const from = prev.indexOf(active.id);
 			const to = prev.indexOf(over.id);
@@ -213,18 +210,7 @@ const useFun = (onChange) => {
 		// console.log(`===join to row ${rowIndex} and col ${colIndex}`);
 	};
 
-	const handleClean = () => {
-		setItems((prev: any) => {
-			const next: IFObject = {};
-			map(prev, (x, key) => {
-				next[key] = dotProp.delete(x, "props._temp");
-			});
-			return next;
-		});
-	};
-
 	const handleDragStart = ({ active }) => {
-		console.log("[create new item ]");
 		if (activeId) return;
 		if (isSource(active)) {
 			const { id, item } = createItem(active);
@@ -259,7 +245,6 @@ const useFun = (onChange) => {
 	};
 
 	const handleRemove = ({ type, id }) => {
-		console.log("[handleRemove]", type, id);
 		if (type === "col") {
 			setCols((prev) => {
 				const next = map(prev, (x) => {
@@ -284,10 +269,48 @@ const useFun = (onChange) => {
 			setCols((prev) => {
 				const next = [...prev];
 				next.splice(rowIndex, 1);
-				console.log("next", next);
 				return next;
 			});
 		}
+	};
+
+	const handleAddRow = () => {
+		const newRowId = nanoid();
+
+		setRows((prev) => {
+			return [...prev, newRowId];
+		});
+
+		setCols((prev) => {
+			return [...prev, []];
+		});
+	};
+
+	const handleAddCol = (active) => {
+		if (!active?.id) return null;
+
+		const props = {
+			id: active?.id,
+			data: {
+				current: {
+					initprops: active?.props,
+				},
+			},
+		};
+
+		const { id, item } = createItem(props);
+
+		setCols((prev) => {
+			return prev.map((x, index) => {
+				if (index === prev.length - 1) {
+					return [...x, id];
+				}
+				return x;
+			});
+		});
+		setItems((prev) => {
+			return Object.assign({}, prev, item);
+		});
 	};
 
 	return {
@@ -318,12 +341,14 @@ const useFun = (onChange) => {
 		handleMoveOut,
 		handleAddToRow,
 		handleDragStart,
-		handleClean,
 		handleNewJoin,
 		handleSwitch,
 		handleMoveGragRow,
 		handleSwithRow,
 		handleMoveGrag,
+
+		handleAddRow,
+		handleAddCol,
 	};
 };
 

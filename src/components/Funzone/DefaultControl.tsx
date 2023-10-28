@@ -32,6 +32,7 @@ const DefaultColControl = ({ handlerProps, type, id }) => {
 			data-fun-control="col"
 			className="min-w-4 handler absolute top-0 right-0 flex opacity-0 transition-all"
 		>
+			<div>{type}</div>
 			<Trash
 				onClick={() => onRemove?.({ type, id })}
 				className="text-gray-200 w-6 h-6 py-1.5  px-1.5 cursor-pointer bg-blue-600/80  hover:text-white hover:bg-blue-600 "

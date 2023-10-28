@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
 	DndContext,
 	KeyboardSensor,
@@ -9,7 +9,6 @@ import {
 	MeasuringStrategy,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import isEqual from "lodash/isEqual";
 import { cond } from "lodash/fp";
 import { Provider } from "../FunzoneContext";
 import DisplayItem from "../DisplayItem";
@@ -22,11 +21,12 @@ import {
 import useFun from "./useFun";
 import { schemaToFunzone, funzoneToSchema } from "./utils";
 
-interface IFFunzone {
-	children: any;
+export interface IFFunzone {
+	children?: any;
 	schema: any;
 	ui: any;
 	control?: any;
+	theme?: any;
 	onChange?: (x: any) => void;
 	renderRowHandler?: ({ handlerProps, type, id }) => React.ReactElement;
 	renderColHandler?: ({ handlerProps, type, id }) => React.ReactElement;
@@ -44,6 +44,7 @@ const Funzone = ({
 	renderColHandler = DefaultColControl,
 	renderLibHandler = DefaultLibControl,
 	renderRowPlaceholder = DefaultRowPlaceholder,
+	theme,
 }: IFFunzone) => {
 	const protalRef = useRef(null);
 
@@ -67,12 +68,13 @@ const Funzone = ({
 		handleMoveOut,
 		handleAddToRow,
 		handleDragStart,
-		handleClean,
 		handleNewJoin,
 		handleSwitch,
 		handleMoveGragRow,
 		handleSwithRow,
 		handleMoveGrag,
+		handleAddRow,
+		handleAddCol,
 	} = useFun(onChange);
 
 	useEffect(() => {
@@ -108,7 +110,6 @@ const Funzone = ({
 			[isSameRow, handleSwitch],
 			[isRoot, handleAddToRow],
 		])(event);
-		handleClean();
 		setActiveId(null);
 		afterChanged();
 	};
@@ -132,6 +133,9 @@ const Funzone = ({
 			renderColHandler,
 			renderLibHandler,
 			renderRowPlaceholder,
+			handleAddRow,
+			handleAddCol,
+			theme,
 		}),
 		[rows, items, cols, ui, control]
 	);
