@@ -1,3 +1,5 @@
+# This is a testing project. Please do not use it in a production environment.
+
 ## Funzone
 
 Just another web builder.
